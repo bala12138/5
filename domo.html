@@ -1,0 +1,114 @@
+﻿<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link href="style/weibo.css" rel="stylesheet" type="text/css" />
+		<script src="ajax.js"></script>
+		
+		<style type="text/css">
+			#page{
+				font-size: 14px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="znsArea" id="message" style="opacity: 1;">
+			<!--留言-->
+			<div class="takeComment">
+				<textarea name="textarea" class="takeTextField" id="t1"></textarea>
+				<div class="takeSbmComment">
+					<input type="button" class="inputs" value="" id="btn1" />
+					<span>(可按 Enter 回复)</span>
+				</div>
+			</div>
+			<!--已留-->
+			<div class="commentOn">
+				<div class="messList" id="msg_box">
+					<!--<div class="reply" id="reply_tpl">
+						<p class="replyContent"></p>
+						<p class="operation">
+							<span class="replyTime" style="color:red"></span>
+							<span class="handle">
+		                    	<a href="javascript:;" class="top"></a>
+		                        <a href="javascript:;" class="down_icon"></a>
+		                        <a href="javascript:;" class="cut">删除</a>
+                    		</span>
+						</p>
+					</div>-->
+				</div>
+				<div class="page" id="page">
+					<button id = 'prev'>上一页</button>
+					<span id = 'nowPage'>1</span>/<span id = 'sumPage'>1</span>
+					<button id = 'next'>下一页</button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$("#btn1").click(function(){
+			if($("#t1").val()==""){
+				alert("留言不能为空")
+				return
+			}else{
+				
+				$("<div class='reply'></div>").append("<p class='replyContent'>"+$("#t1").val()+"</p>")
+											.append("<p class='operation'><span class='replyTime' style='color:red'>"+new Date().toLocaleString()+"</span><span class='handle'><a href='javascript:;' class='top'></a><a href='javascript:;' class='down_icon'></a><a href='javascript:;' class='cut'>删除</a></span></p>")
+											.appendTo("#msg_box")
+										
+									
+				$(".cut").click(function(){
+					$(this).parent().parent().parent().remove()
+				})
+//				$("#t1").val('')
+			}
+			page()
+		})
+		
+		function page(){
+			//总页数
+			$("#sumPage").text(Math.ceil($(".reply").length/6));
+			//每页显示5行
+			$(".reply:gt(5)").css("display","none");
+		}
+		
+		
+		
+		//计数器
+		var index = 0 ; 
+		//下一页
+		$("#next").on("click",function(){
+		//判断当前页码是否大于总页码
+			if($("#nowPage").text()<$("#sumPage").text()){
+				//页码
+				$("#nowPage").text($("#nowPage").text()-0+1);
+				//计数器加5
+				index+=6;
+				//先将所有的tr隐藏
+				$(".reply").css("display","none");
+				//显示对应索引的5行
+				for(var i=0 ; i<=5 ; i++){
+					$(".reply").eq(i+index).css("display","block");
+				}
+			}
+		});
+		//上一页
+		$("#prev").on("click",function(){
+		//判断当前页码是否大于1
+			if($("#nowPage").text()>1){
+				$("#nowPage").text($("#nowPage").text()-1);
+				index-=6;
+				//先将所有的tr隐藏
+				$(".reply").css("display","none");
+				for(var i=0 ; i<=6 ; i++){
+					$(".reply").eq(i+index).css("display","block");
+				}
+			}
+		});
+	</script>
+	
+
+</html>
